@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.secret_app">
+    package="com.example.gamaverse">
    <application
-        android:label="secret_app"
+        android:label="gamaverse"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -1,4 +1,4 @@
-package com.example.secret_app
+package com.example.gamaverse
 
 import io.flutter.embedding.android.FlutterActivity
 

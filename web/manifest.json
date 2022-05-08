@@ -1,6 +1,6 @@
 {
-    "name": "secret_app",
-    "short_name": "secret_app",
+    "name": "gamaverse",
+    "short_name": "gamaverse",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
