@@ -1,3 +1,5 @@
 {
-    
+    "landscape": "landscape",
+    "horizontal": "horizontal",
+    "vertical": "vertical"
 }
