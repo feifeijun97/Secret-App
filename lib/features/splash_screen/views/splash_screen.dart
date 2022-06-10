@@ -6,6 +6,7 @@ import 'package:gamaverse/features/splash_screen/cubit/theme_cubit.dart';
 import 'package:gamaverse/utils/routers/fluro_application.dart';
 import 'package:gamaverse/utils/routers/router.dart';
 import 'package:gamaverse/utils/theme/theme.dart';
+import 'package:sizer/sizer.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -52,7 +53,7 @@ class _SplashScreenViewState extends State<SplashScreenView> {
           // print('asdf');
           // ScaffoldMessenger.of(context)
           //     .showSnackBar(SnackBar(content: Text(state.appTheme.name)));
-          print('qwerqwer');
+          // print('qwerqwer');
 
           // FluroApplication.router.navigateTo(
           //   context,
@@ -70,18 +71,32 @@ class _SplashScreenViewState extends State<SplashScreenView> {
           //     .showSnackBar(SnackBar(content: Text(state.appTheme.name)));
           //TODO: show error and quit
         }
-        return MaterialApp(
-          localizationsDelegates: context.localizationDelegates,
-          supportedLocales: context.supportedLocales,
-          locale: context.locale,
-          theme: appThemeData[state.appTheme],
-          onGenerateRoute: FluroApplication.router.generator,
-          home: Scaffold(
-            backgroundColor: Colors.black,
-            body: Center(
-                child: Image(image: AssetImage('assets/images/logo.png'))),
-          ),
-        );
+        return Sizer(builder: (context, orientation, deviceType) {
+          return MaterialApp(
+            localizationsDelegates: context.localizationDelegates,
+            supportedLocales: context.supportedLocales,
+            locale: context.locale,
+            theme: appThemeData[state.appTheme],
+            onGenerateRoute: FluroApplication.router.generator,
+            home: Builder(
+              builder: (context) => Scaffold(
+                backgroundColor: Colors.black,
+                body: Center(
+                  child: InkWell(
+                      onTap: () => FluroApplication.router.navigateTo(
+                            context,
+                            'comic_reader',
+                          ),
+                      child: const Image(
+                          image: AssetImage('assets/images/logo.png'))),
+                  // child: TextButton(
+                  //     onPressed: () =>
+                  //     child: Text('asd')),
+                ),
+              ),
+            ),
+          );
+        });
       },
     );
   }
