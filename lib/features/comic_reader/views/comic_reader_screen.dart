@@ -25,6 +25,7 @@ class _ComicReaderScreenState extends State<ComicReaderScreen>
   bool visible = false;
   double brightness = 30;
   double page = 2;
+  double lastScrollPosition = 0;
   final ItemScrollController _itemScrollController = ItemScrollController();
   final ItemPositionsListener _itemPositionsListener =
       ItemPositionsListener.create();
@@ -93,11 +94,15 @@ class _ComicReaderScreenState extends State<ComicReaderScreen>
   void didChangeDependencies() {
     super.didChangeDependencies();
     _itemPositionsListener.itemPositions.addListener(() {
+      double scrollPosition =
+          _itemPositionsListener.itemPositions.value.first.itemLeadingEdge;
+      if (lastScrollPosition != scrollPosition) {
+        hideToolkit();
+        setState(() => lastScrollPosition = scrollPosition);
+      }
       int index = _itemPositionsListener.itemPositions.value.first.index + 1;
       if (index != page) {
-        setState(() {
-          page = index.toDouble();
-        });
+        setState(() => page = index.toDouble());
       }
     });
   }
@@ -121,30 +126,34 @@ class _ComicReaderScreenState extends State<ComicReaderScreen>
       "https://manhua1035-104-250-150-12.cdnmanhua.net/50/49023/1174121/1_1810.jpg?cid=1174121&key=944ed92a004a7761bd2f8d098db4ccd7&type=1",
       "https://manhua1035-104-250-150-12.cdnmanhua.net/50/49023/1174121/1_1810.jpg?cid=1174121&key=944ed92a004a7761bd2f8d098db4ccd7&type=1",
     ];
-    Widget floatingPanel({
+    Widget slideTransitionFloatingPanel({
       EdgeInsetsGeometry padding = EdgeInsets.zero,
       required Alignment alignment,
       List<Widget> children = const <Widget>[],
       BorderRadiusGeometry borderRadius = BorderRadius.zero,
       Color color = Colors.black,
+      required Animation<Offset> position,
     }) {
-      return Align(
-        alignment: alignment,
-        child: Container(
-            decoration: BoxDecoration(
-              borderRadius: borderRadius,
-              color: color,
-            ),
-            child: Padding(
-              padding: padding,
-              child: IntrinsicWidth(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: children,
-                ),
+      return SlideTransition(
+        position: position,
+        child: Align(
+          alignment: alignment,
+          child: Container(
+              decoration: BoxDecoration(
+                borderRadius: borderRadius,
+                color: color,
               ),
-            )),
+              child: Padding(
+                padding: padding,
+                child: IntrinsicWidth(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: children,
+                  ),
+                ),
+              )),
+        ),
       );
     }
 
@@ -177,68 +186,39 @@ class _ComicReaderScreenState extends State<ComicReaderScreen>
     }
 
     return Scaffold(
-      body: Stack(children: [
-        // InkWell(
-        //   onTap: () => print('clicked $brightness'),
-        //   child: ListView.builder(
-        //     physics: const AlwaysScrollableScrollPhysics(),
-        //     itemCount: images.length,
-        //     shrinkWrap: true,
-        //     itemBuilder: (context, index) {},
-        //   ),
-        // ),
-        // AnimatedList(
-        //   initialItemCount: images.length,
-        //   physics: const AlwaysScrollableScrollPhysics(),
-        //   itemBuilder: ((context, index, animation) {
-        //     return CachedNetworkImage(
-        //       progressIndicatorBuilder: ((context, url, progress) => Center(
-        //             child: SizedBox(
-        //               width: 10.w,
-        //               child: CircularProgressIndicator(
-        //                 value: progress.progress,
-        //                 backgroundColor: Colors.grey,
-        //                 color: Colors.black,
-        //               ),
-        //             ),
-        //           )),
-        //       fit: BoxFit.fill,
-        //       imageUrl: images[index],
-        //       width: 100.w,
-        //       height: 100.h,
-        //     );
-        //   }),
-        // ),
-        InkWell(
-          onTapDown: (_) => hideToolkit(),
-          onTap: () => animateToolkit(),
-          child: ScrollablePositionedList.builder(
-              itemScrollController: _itemScrollController,
-              itemPositionsListener: _itemPositionsListener,
-              itemCount: images.length,
-              itemBuilder: (context, index) {
-                return CachedNetworkImage(
-                  progressIndicatorBuilder: ((context, url, progress) => Center(
-                        child: SizedBox(
-                          width: 10.w,
-                          child: CircularProgressIndicator(
-                            value: progress.progress,
-                            backgroundColor: Colors.grey,
-                            color: Colors.black,
+      body: Stack(
+        children: [
+          GestureDetector(
+            onTap: () => animateToolkit(),
+            child: ScrollablePositionedList.builder(
+                itemScrollController: _itemScrollController,
+                itemPositionsListener: _itemPositionsListener,
+                itemCount: images.length,
+                itemBuilder: (context, index) {
+                  return CachedNetworkImage(
+                    progressIndicatorBuilder: ((context, url, progress) =>
+                        Center(
+                          child: SizedBox(
+                            width: 10.w,
+                            child: CircularProgressIndicator(
+                              value: progress.progress ?? 0.0,
+                              backgroundColor: Colors.grey,
+                              valueColor:
+                                  const AlwaysStoppedAnimation(Colors.black),
+                            ),
                           ),
-                        ),
-                      )),
-                  fit: BoxFit.fill,
-                  imageUrl: images[index],
-                  width: 100.w,
-                  height: 100.h,
-                );
-              }),
-        ),
-        SlideTransition(
-          position: _rightAnimation,
-          child: floatingPanel(
-            padding: const EdgeInsets.all(10),
+                        )),
+                    fit: BoxFit.fill,
+                    imageUrl: images[index],
+                    width: 100.w,
+                    height: 100.h,
+                  );
+                }),
+          ),
+          //right panel
+          slideTransitionFloatingPanel(
+            position: _rightAnimation,
+            padding: const EdgeInsets.all(15),
             alignment: Alignment.centerRight,
             borderRadius:
                 const BorderRadius.horizontal(left: Radius.circular(5)),
@@ -255,11 +235,10 @@ class _ComicReaderScreenState extends State<ComicReaderScreen>
                   onPressed: () => print('page view')),
             ],
           ),
-        ),
-        SlideTransition(
-          position: _leftAnimation,
-          child: floatingPanel(
-            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+          //left panel
+          slideTransitionFloatingPanel(
+            position: _leftAnimation,
+            padding: const EdgeInsets.all(15),
             alignment: Alignment.centerLeft,
             borderRadius:
                 const BorderRadius.horizontal(right: Radius.circular(5)),
@@ -291,11 +270,10 @@ class _ComicReaderScreenState extends State<ComicReaderScreen>
               ),
             ],
           ),
-        ),
-        SlideTransition(
-          position: _topAnimation,
-          child: floatingPanel(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+          //top panel
+          slideTransitionFloatingPanel(
+            position: _topAnimation,
+            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
             alignment: Alignment.topLeft,
             borderRadius:
                 const BorderRadius.vertical(bottom: Radius.circular(5)),
@@ -323,11 +301,10 @@ class _ComicReaderScreenState extends State<ComicReaderScreen>
               )
             ],
           ),
-        ),
-        SlideTransition(
-          position: _bottomAnimation,
-          child: floatingPanel(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+          //bottom panel
+          slideTransitionFloatingPanel(
+            position: _bottomAnimation,
+            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
             alignment: Alignment.bottomLeft,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(5)),
             color: Colors.black87,
@@ -377,15 +354,8 @@ class _ComicReaderScreenState extends State<ComicReaderScreen>
               ),
             ],
           ),
-        ),
-        // SlideTransition(
-        //     position: _animation,
-        //     child: Container(
-        //       width: 40,
-        //       height: 20,
-        //       color: Colors.red,
-        //     ))
-      ]),
+        ],
+      ),
     );
   }
 }
