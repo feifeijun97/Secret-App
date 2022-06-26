@@ -7,7 +7,7 @@ import 'package:gamaverse/features/comic_reader/views/comic_reader_screen.dart';
 
 var comicReaderHandler = Handler(
   handlerFunc: (context, params) {
-    return const ComicReaderScreen();
+    return const ComicPage();
   },
 );
 

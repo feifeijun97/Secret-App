@@ -1,34 +1,39 @@
 import 'package:equatable/equatable.dart';
 
 class Comic extends Equatable {
-  final String id;
-  final String episod;
+  final String id, nextId, prevId;
+  final String chapter;
   final String title;
   final List<String> imageUrls;
-  
+  final int pageCount;
 
   const Comic({
     this.id = "",
-    this.episod = "",
+    this.chapter = "",
     this.title = "",
     this.imageUrls = const <String>[],
-
+    this.nextId = "",
+    this.prevId = "",
+    this.pageCount = 0,
   });
 
   Comic copyWith({
     String? id,
-    String? episod,
+    String? chapter,
     String? title,
     List<String>? imageUrls,
-    bool? isLastEpisod,
-    bool? isFirstEpisod,
+    String? nextId,
+    String? prevId,
+    int? pageCount,
   }) {
     return Comic(
       id: id ?? this.id,
-      episod: episod ?? this.episod,
+      chapter: chapter ?? this.chapter,
       title: title ?? this.title,
       imageUrls: imageUrls ?? this.imageUrls,
-
+      nextId: nextId ?? this.nextId,
+      prevId: prevId ?? this.prevId,
+      pageCount: pageCount ?? this.pageCount,
     );
   }
 
@@ -44,14 +49,16 @@ class Comic extends Equatable {
       "https://manhua1035-104-250-150-12.cdnmanhua.net/50/49023/1174121/1_1810.jpg?cid=1174121&key=944ed92a004a7761bd2f8d098db4ccd7&type=1",
     ];
     return Comic(
-        id: id,
-        episod: id,
-        title: 'Title $id',
-        imageUrls: imageUrls,
-        );
+      id: id,
+      chapter: id,
+      title: 'Title $id',
+      imageUrls: imageUrls,
+      nextId: (int.parse(id) + 1).toString(),
+      prevId: (int.parse(id) - 1).toString(),
+      pageCount: 7,
+    );
   }
 
   @override
-  List<Object?> get props =>
-      [id, episod, title, imageUrls];
+  List<Object?> get props => [id, chapter, title, imageUrls];
 }

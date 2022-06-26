@@ -1,5 +1,7 @@
 part of 'comic_bloc.dart';
 
+enum FetchDirection { current, next, previous }
+
 abstract class ComicEvent extends Equatable {
   const ComicEvent();
 
@@ -9,9 +11,10 @@ abstract class ComicEvent extends Equatable {
 
 class FetchComic extends ComicEvent {
   final String id;
+  final FetchDirection direction;
 
-  const FetchComic({required this.id});
+  const FetchComic({required this.id, this.direction = FetchDirection.current});
 
   @override
-  List<Object> get props => [id];
+  List<Object> get props => [id, direction];
 }

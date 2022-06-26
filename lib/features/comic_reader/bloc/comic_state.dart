@@ -4,30 +4,52 @@ enum ComicStatus { initial, loading, success, failure }
 
 class ComicState extends Equatable {
   final ComicStatus status;
-  final Comic comic;
-  final bool isFirstEpisod;
-  final bool isLastEpisod;
+  final List<Comic> comics;
+  final String nextEpisodId;
+  final String prevEpisodId;
+  final bool hasReachedFirst;
+  final bool hasReachedLast;
+  //store accumulate pages of all comic, use to find respective chapter in listview.
+  final List<int> pageCountList;
 
   const ComicState({
     this.status = ComicStatus.initial,
-    this.comic = const Comic(),
-    this.isFirstEpisod = false,
-    this.isLastEpisod = false,
+    this.comics = const [],
+    this.nextEpisodId = '',
+    this.prevEpisodId = '',
+    this.hasReachedFirst = false,
+    this.hasReachedLast = false,
+    this.pageCountList = const [],
   });
 
-  ComicState copyWith(
-      {ComicStatus? status,
-      Comic? comic,
-      bool? isFirstEpisod,
-      bool? isLastEpisod}) {
+  ComicState copyWith({
+    ComicStatus? status,
+    List<Comic>? comics,
+    String? nextEpisodId,
+    String? prevEpisodId,
+    bool? hasReachedFirst,
+    bool? hasReachedLast,
+    List<int>? pageCountList,
+  }) {
     return ComicState(
       status: status ?? this.status,
-      comic: comic ?? this.comic,
-      isFirstEpisod: isFirstEpisod ?? this.isFirstEpisod,
-      isLastEpisod: isLastEpisod ?? this.isLastEpisod,
+      comics: comics ?? this.comics,
+      nextEpisodId: nextEpisodId ?? this.nextEpisodId,
+      prevEpisodId: prevEpisodId ?? this.prevEpisodId,
+      hasReachedFirst: hasReachedFirst ?? this.hasReachedFirst,
+      hasReachedLast: hasReachedLast ?? this.hasReachedLast,
+      pageCountList: pageCountList ?? this.pageCountList,
     );
   }
 
   @override
-  List<Object> get props => [status, comic, isFirstEpisod, isLastEpisod];
+  List<Object> get props => [
+        status,
+        comics,
+        nextEpisodId,
+        prevEpisodId,
+        hasReachedFirst,
+        hasReachedLast,
+        pageCountList,
+      ];
 }
