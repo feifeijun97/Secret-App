@@ -1,5 +1,6 @@
 {
     "landscape": "landscape",
     "horizontal": "horizontal",
-    "vertical": "vertical"
+    "vertical": "vertical",
+    "failed to fetch comic": "failed to fetch comic"
 }
