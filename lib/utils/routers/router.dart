@@ -3,6 +3,7 @@ import './route_handlers.dart';
 
 class Routers {
   static String root = "/";
+  static String home = "/home";
   static String comicReader = "/comic_reader";
   // static String demoSimpleFixedTrans = "/demo/fixedtrans";
   // static String demoFunc = "/demo/func";
@@ -17,6 +18,7 @@ class Routers {
     );
 
     router.define(comicReader, handler: comicReaderHandler);
+    router.define(home, handler: homePageHandler);
 
     // router.define(demoSimpleFixedTrans,
     //     handler: demoRouteHandler, transitionType: TransitionType.inFromLeft);

@@ -18,8 +18,6 @@ class ThemeCubit extends HydratedCubit<ThemeState> {
   Map<String, dynamic> toJson(state) => state.toJson();
 
   Future<void> fetchTheme() async {
-    sleep(Duration(seconds: 5));
-    print(state);
     emit(state.copyWith(appTheme: AppTheme.dark, status: ThemeStatus.success));
     // print(state);
     // sleep(Duration(seconds: 2));

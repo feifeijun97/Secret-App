@@ -85,7 +85,7 @@ class _SplashScreenViewState extends State<SplashScreenView> {
                   child: InkWell(
                       onTap: () => FluroApplication.router.navigateTo(
                             context,
-                            'comic_reader',
+                            'home',
                           ),
                       child: const Image(
                           image: AssetImage('assets/images/logo.png'))),

@@ -4,6 +4,7 @@
 // import 'package:flutter/painting.dart';
 import 'package:fluro/fluro.dart';
 import 'package:gamaverse/features/comic_reader/views/comic_reader_screen.dart';
+import 'package:gamaverse/features/home/views/home_screen.dart';
 
 var comicReaderHandler = Handler(
   handlerFunc: (context, params) {
@@ -11,6 +12,11 @@ var comicReaderHandler = Handler(
   },
 );
 
+var homePageHandler = Handler(
+  handlerFunc: (context, params) {
+    return HomeScreen();
+  },
+);
 // var characterDetailHandler =
 //     Handler(handlerFunc: (context, params) {
 //     final character = context?.settings?.arguments as Character;
